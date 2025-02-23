@@ -63,7 +63,9 @@
 
 .rbc-timeslot-group {
   background-color: #f7fdff !important;
+  min-height: 140px !important;
 }
+
 
 .rbc-day-slot {
   font-size: 14px !important;
