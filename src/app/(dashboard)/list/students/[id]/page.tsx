@@ -17,7 +17,7 @@ const SingleStudentPage = () => {
             <div className="w-1/3">
               <Image
                 src="https://images.pexels.com/photos/5414817/pexels-photo-5414817.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                alt="teacher-image"
+                alt="student-image"
                 width={144}
                 height={144}
                 className="w-36 h-36 rounded-full object-cover"
