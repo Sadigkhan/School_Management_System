@@ -24,6 +24,7 @@ model Student{
   address String
   image String?
   bloodType String
+  birthday DateTime
   gender UserGender
   createdAt DateTime @default(now())
   parentId String
@@ -46,6 +47,7 @@ model Teacher{
   address String
   image String?
   bloodType String
+  birthday DateTime
   gender UserGender
   createdAt DateTime @default(now())
   subjects Subject[]
@@ -77,8 +79,8 @@ model Class{
   id Int @id @default(autoincrement())
   name String @unique
   capacity Int
-  supervisorId String
-  supervisor Teacher @relation(fields: [supervisorId],references: [id])
+  supervisorId String?
+  supervisor Teacher? @relation(fields: [supervisorId],references: [id])
   lessons Lesson[]
   students Student[]
   gradeId Int
@@ -110,7 +112,7 @@ model Lesson{
   teacherId String
   teacher Teacher @relation(fields: [teacherId],references: [id])
   exams Exam[]
-  assingments Assingment[]
+  assignment Assignment[]
   attendances Attendance[]
 }
 
@@ -125,7 +127,7 @@ model Exam{
 
 }
 
-model Assingment{
+model Assignment{
   id Int @id @default(autoincrement())
   title String
   startDate DateTime
@@ -142,8 +144,8 @@ model Result{
   examId Int?
   exam Exam? @relation(fields: [examId],references: [id])
 
-  assingmentId Int?
-  assingment Assingment? @relation(fields: [assingmentId],references: [id])
+  assignmentId Int?
+  assignment Assignment? @relation(fields: [assignmentId],references: [id])
 
   studentId String
   student Student @relation(fields: [studentId],references: [id])
@@ -165,8 +167,8 @@ model Event{
   id Int @id @default(autoincrement())
   title String
   description String
-  startDate DateTime
-  endDate DateTime
+  startTime DateTime
+  endTime DateTime
   classId Int?
   class Class? @relation(fields: [classId],references: [id])  
 }
