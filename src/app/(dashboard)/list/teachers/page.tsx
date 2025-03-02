@@ -5,7 +5,7 @@ import TableSearch from "@/components/TableSearch";
 import { role, teachersData } from "@/lib/data";
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { Class, Lesson, Subject, Teacher } from "@prisma/client";
+import { Class, Lesson, Prisma, Subject, Teacher } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -94,28 +94,49 @@ const renderRow = (item: TeacherList) => (
 const TeacherListPage = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string  | undefined};
+  searchParams: { [key: string]: string | undefined };
 }) => {
-    const {page, ...queryParams} = searchParams;
+  const { page, ...queryParams } = searchParams;
 
-    const p = page ? parseInt(page) : 1;
+  const p = page ? parseInt(page) : 1;
 
-  const [data,count] = await prisma.$transaction([
+  // URL PARAMS CONDITIONS
 
-         prisma.teacher.findMany({
-          include: {
-              subjects: true,
-              classes: true,
-              lessons: true,
-            },
-            take:ITEM_PER_PAGE,
-            skip:ITEM_PER_PAGE*(p-1)
-        }),
+  const query: Prisma.TeacherWhereInput = {};
 
-          prisma.teacher.count(),
-    ])  
-        
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "classId": 
+            query.lessons = {
+              some: {
+                classId: parseInt(value),
+              }
+            };
+            break;
+          case "search":
+            query.name = {contains:value,mode:"insensitive"}
+          
+        }
+      }
+    }
+  }
 
+  const [data, count] = await prisma.$transaction([
+    prisma.teacher.findMany({
+      where:query,
+      include: {
+        subjects: true,
+        classes: true,
+        lessons: true,
+      },
+      take: ITEM_PER_PAGE,
+      skip: ITEM_PER_PAGE * (p - 1),
+    }),
+
+    prisma.teacher.count({where:query}),
+  ]);
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
@@ -144,7 +165,7 @@ const TeacherListPage = async ({
       <Table columns={columns} renderRow={renderRow} data={data} />
       {/* Pagination */}
       <div className="">
-        <Pagination page={p} count ={count} />
+        <Pagination page={p} count={count} />
       </div>
     </div>
   );
