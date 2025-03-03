@@ -65,18 +65,22 @@ const AnnouncementListPage = async ({
 
   // URL PARAMS CONDITIONS
 
-  const query: Prisma.AnnouncementWhereInput = {};
+  const query: Prisma.AnnouncementWhereInput = {
+    class: {}
+  };
 
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
         switch (key) {
           case "search":
-            query.title = {contains:value,mode:"insensitive"}
+            query.OR = [
+              { title: { contains: value, mode: "insensitive" } },
+              { class: { name: { contains: value, mode: "insensitive" } } }
+            ];
             break;
-            default:
-              break;
-          
+          default:
+            break;
         }
       }
     }
@@ -84,7 +88,7 @@ const AnnouncementListPage = async ({
 
   const [data, count] = await prisma.$transaction([
     prisma.announcement.findMany({
-      where:query,
+      where: query,
       include: {
         class: true,
       },
@@ -92,7 +96,7 @@ const AnnouncementListPage = async ({
       skip: ITEM_PER_PAGE * (p - 1),
     }),
 
-    prisma.announcement.count({where:query}),
+    prisma.announcement.count({ where: query }),
   ]);
 
   return (
