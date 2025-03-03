@@ -92,6 +92,8 @@ const AssignmentListPage = async ({
                     }
                 }
                 break;
+            default:
+                break;
         }
       }
     }
