@@ -918,7 +918,7 @@ export const announcementsData = [
 
 export const calendarEvents = [
   {
-    title: "MathMathMathMathMathMathMathMathMathMathMathMathMathMathMath",
+    title: "Math",
     allDay: false,
     start: new Date(2025, 1, 23, 8, 0),
     end: new Date(2025, 1, 23, 8, 45),
