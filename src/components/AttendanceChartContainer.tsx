@@ -37,7 +37,7 @@ const AttendanceChartContainer = async () => {
     }
 
     resData.forEach(item => {
-        const itemDate = new Date(item.date)
+        // const itemDate = new Date(item.date)
 
         if(dayOfWeek>=1 && dayOfWeek<=7){
             const dayName = daysOfWeek[dayOfWeek-1];
@@ -55,7 +55,7 @@ const AttendanceChartContainer = async () => {
         present:attendaceMap[day].present,
         absent:attendaceMap[day].absent
     }))
-    
+
   return (
     <div className="bg-white rounde-lg p-4 h-full">
       <div className="flex  justify-between items-center">
