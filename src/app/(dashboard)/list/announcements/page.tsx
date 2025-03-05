@@ -7,15 +7,10 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { getRole, getUserId } from "@/lib/utils";
 import { Announcement, Class, Prisma } from "@prisma/client";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 
 
 type AnnouncementList = Announcement & {class:Class}
-
-
-
-
 
 const AnnouncementListPage = async ({
   searchParams,

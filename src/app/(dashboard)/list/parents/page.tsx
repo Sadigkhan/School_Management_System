@@ -4,7 +4,7 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { prisma } from '@/lib/prisma'
 import { ITEM_PER_PAGE } from '@/lib/settings'
-import { getRole, getUserId } from '@/lib/utils'
+import { getRole } from '@/lib/utils'
 import { Parent, Prisma, Student } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
@@ -19,7 +19,6 @@ const ParentListPage = async ({
 }) => {
 
     const role = await getRole();
-    const currentUserId = await getUserId();
 
     const columns = [
         {

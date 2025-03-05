@@ -5,7 +5,6 @@ import TableSearch from "@/components/TableSearch";
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { getRole, getUserId } from "@/lib/utils";
-import { auth } from "@clerk/nextjs/server";
 import { Assignment, Class, Prisma, Subject, Teacher } from "@prisma/client";
 import Image from "next/image";
 import React from "react";
@@ -184,10 +183,9 @@ const AssignmentListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-eduYellow">
               <Image src="/sort.png" alt="sort-icon" width={14} height={14} />
             </button>
-            {role === "admin" ||
-              (role === "teacher" && (
+            {(role === "admin" ||role === "teacher") && (
                 <FormModal table="assignment" type="create" />
-              ))}
+              )}
           </div>
         </div>
       </div>
