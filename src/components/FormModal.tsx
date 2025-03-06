@@ -10,12 +10,17 @@ const TeacherForm = dynamic (()=>import("./forms/TeacherForm"),{
 const StudentForm = dynamic (()=>import("./forms/StudentForm"),{
   loading:()=> <h1>Loading...</h1>
 })
+const SubjectForm = dynamic(() => import("./forms/SubjectForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+
 
 const forms: {
   [key: string]: (type: "create" | "update", data?: any) => React.JSX.Element;
 } = {
   teacher: (type, data) => <TeacherForm type={type} data={data} />,
   student: (type, data) => <StudentForm type={type} data={data} />,
+  subject: (type,data) => <SubjectForm type={type} data={data}/>
 };
 
 const FormModal = ({
