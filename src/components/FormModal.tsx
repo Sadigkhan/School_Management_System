@@ -1,8 +1,27 @@
 "use client";
+import { deleteSubject } from "@/lib/actions";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "react-toastify";
 
+
+const deleteActionMap = {
+  subject:deleteSubject,
+  // class:deleteClass,
+  // teacher:deleteTeacher,
+  // student:deleteStudent,
+  // parent:deleteParent,
+  // lesson:deleteLesson,
+  // exam:deleteExam,
+  // assignment:deleteAssignment,
+  // result:deleteResult,
+  // attendance:deleteAttendance,
+  // event:deleteEvent,
+  // announcement:deleteAnnouncement,
+}
 
 const TeacherForm = dynamic (()=>import("./forms/TeacherForm"),{
   loading:()=> <h1>Loading...</h1>
@@ -16,11 +35,11 @@ const SubjectForm = dynamic(() => import("./forms/SubjectForm"), {
 
 
 const forms: {
-  [key: string]: (type: "create" | "update", data?: any) => React.JSX.Element;
+  [key: string]: (setOpen:Dispatch<SetStateAction<boolean>>, type: "create" | "update", data?: any) => React.JSX.Element;
 } = {
-  teacher: (type, data) => <TeacherForm type={type} data={data} />,
-  student: (type, data) => <StudentForm type={type} data={data} />,
-  subject: (type,data) => <SubjectForm type={type} data={data}/>
+  teacher: (setOpen,type,data) => <TeacherForm type={type} data={data} setOpen={setOpen}/>,
+  student: (setOpen,type,data) => <StudentForm type={type} data={data} setOpen={setOpen}/>,
+  subject: (setOpen,type,data) => <SubjectForm type={type} data={data} setOpen={setOpen}/>
 };
 
 const FormModal = ({
@@ -55,10 +74,25 @@ const FormModal = ({
       : "bg-eduPurple";
 
   const [open, setOpen] = useState(false);
+  
 
   const Form = () => {
+
+    const [state,formAction] = useFormState(deleteActionMap[table],{success:false,error:false})
+
+    const router = useRouter();
+
+    useEffect(()=>{
+      if(state.success){
+        toast(`Subject Successfully Deleted!`)
+        setOpen(false)
+        router.refresh()
+      }
+    },[state])
+
     return type === "delete" && id ? (
-      <form action="" className="p-4 flex flex-col gap-4 ">
+      <form action={formAction} className="p-4 flex flex-col gap-4 ">
+        <input type="text | number" name="id" value={id} hidden />
         <span className="text-center font-medium">
           All data will be lost... Are you sure you want to delete this {table}?
         </span>
@@ -67,7 +101,7 @@ const FormModal = ({
         </button>
       </form>
     ) : type === "create" || type === "update" ? (
-      forms[table](type, data)
+      forms[table](setOpen,type, data)
     ) : (
       "Form Not Found"
     )
