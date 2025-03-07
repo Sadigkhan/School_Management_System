@@ -54,9 +54,10 @@ const SubjectForm = ({
       setOpen(false);
       router.refresh();
     }
-  }, [state, type, setOpen, router]);
+  }, [state]);
 
   const { teachers } = relatedData || {};
+
 
   return (
     <form className="flex flex-col gap-8" onSubmit={onSubmit}>
@@ -88,6 +89,7 @@ const SubjectForm = ({
             multiple
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
             {...register("teachers")}
+            defaultValue={data?.teachers}
           >
             {teachers?.map((teacher: { id: string; name: string; surname: string }) => (
               <option key={teacher.id} value={teacher.id}>

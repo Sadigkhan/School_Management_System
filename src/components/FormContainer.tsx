@@ -1,6 +1,5 @@
-import React from "react";
-import FormModal from "./FormModal";
 import { prisma } from "@/lib/prisma";
+import FormModal from "./FormModal";
 
 export type FormContainerProps = {
   table:
@@ -23,27 +22,32 @@ export type FormContainerProps = {
 
 const FormContainer = async ({ table, type, data, id }: FormContainerProps) => {
 
-    let relatedData = {}
+  let relatedData = {};
 
-    if(type !== "delete"){
-        switch (table) {
-            case "subject":
-
-                const subjectTeachers = await prisma.teacher.findMany({
-                    select:{id:true,name:true,surname:true},
-                })
-
-                relatedData = {teachers:subjectTeachers}
-                
-                break;
+  if (type !== "delete") {
+    switch (table) {
+      case "subject":
+        const subjectTeachers = await prisma.teacher.findMany({
+          select: { id: true, name: true, surname: true },
+        });
+        relatedData = { teachers: subjectTeachers };
         
-            default:
-                break;
-        }
+        break;
+      
+      default:
+        break;
     }
+  }
+  console.log("FormContainer -> relatedData:", relatedData); 
   return (
-    <div>
-      <FormModal table={table} type={type} data={data} id={id} relatedData={relatedData}/>
+    <div className="">
+      <FormModal
+        table={table}
+        type={type}
+        data={data}
+        id={id}
+        relatedData={relatedData}
+      />
     </div>
   );
 };

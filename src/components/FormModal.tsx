@@ -38,9 +38,9 @@ const SubjectForm = dynamic(() => import("./forms/SubjectForm"), {
 const forms: {
   [key: string]: (setOpen:Dispatch<SetStateAction<boolean>>, type: "create" | "update", data?: any,relatedData?:any) => React.JSX.Element;
 } = {
-  teacher: (setOpen,type,data,relatedData) => <TeacherForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>,
-  student: (setOpen,type,data,relatedData) => <StudentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>,
-  subject: (setOpen,type,data,relatedData) => <SubjectForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>
+  subject: (setOpen,type,data,relatedData) => <SubjectForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>,
+  // teacher: (setOpen,type,data,relatedData) => <TeacherForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>,
+  // student: (setOpen,type,data,relatedData) => <StudentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>,
 };
 
 const FormModal = ({
@@ -48,8 +48,9 @@ const FormModal = ({
   type,
   data,
   id,
-  relatedData
+  relatedData,
 }: FormContainerProps & {relatedData?:any}) => {
+  console.log("FormModal -> relatedData", relatedData);
   const size = type === "create" ? "w-8 h-8" : "w-7 h-7";
   const bgColor =
     type === "create"
@@ -59,10 +60,9 @@ const FormModal = ({
       : "bg-eduPurple";
 
   const [open, setOpen] = useState(false);
+
   
-
   const Form = () => {
-
     const [state, formAction] = useFormState(deleteActionMap[table], {
       success: false,
       error: false,
@@ -77,7 +77,9 @@ const FormModal = ({
         setOpen(false)
         router.refresh()
       }
-    },[state])
+    },[state,router])
+
+
 
     return type === "delete" && id ? (
       <form action={formAction} className="p-4 flex flex-col gap-4 ">

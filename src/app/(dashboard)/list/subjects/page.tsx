@@ -110,7 +110,7 @@ const SubjectListPage = async ({
                     {role==="admin"
                         &&
                         (
-                            <FormModal table="subject" type="create" />
+                            <FormContainer table="subject" type="create" />
                         )
                     }
                 </div>
