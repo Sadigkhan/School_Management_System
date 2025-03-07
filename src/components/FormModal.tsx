@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
+import { FormContainerProps } from "./FormContainer";
 
 
 const deleteActionMap = {
@@ -35,11 +36,11 @@ const SubjectForm = dynamic(() => import("./forms/SubjectForm"), {
 
 
 const forms: {
-  [key: string]: (setOpen:Dispatch<SetStateAction<boolean>>, type: "create" | "update", data?: any) => React.JSX.Element;
+  [key: string]: (setOpen:Dispatch<SetStateAction<boolean>>, type: "create" | "update", data?: any,relatedData?:any) => React.JSX.Element;
 } = {
-  teacher: (setOpen,type,data) => <TeacherForm type={type} data={data} setOpen={setOpen}/>,
-  student: (setOpen,type,data) => <StudentForm type={type} data={data} setOpen={setOpen}/>,
-  subject: (setOpen,type,data) => <SubjectForm type={type} data={data} setOpen={setOpen}/>
+  teacher: (setOpen,type,data,relatedData) => <TeacherForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>,
+  student: (setOpen,type,data,relatedData) => <StudentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>,
+  subject: (setOpen,type,data,relatedData) => <SubjectForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>
 };
 
 const FormModal = ({
@@ -47,24 +48,8 @@ const FormModal = ({
   type,
   data,
   id,
-}: {
-  table:
-    | "teacher"
-    | "student"
-    | "parent"
-    | "subject"
-    | "class"
-    | "lesson"
-    | "exam"
-    | "assignment"
-    | "result"
-    | "attendance"
-    | "event"
-    | "announcement";
-  type: "create" | "update" | "delete";
-  data?: any;
-  id?: number | string;
-}) => {
+  relatedData
+}: FormContainerProps & {relatedData?:any}) => {
   const size = type === "create" ? "w-8 h-8" : "w-7 h-7";
   const bgColor =
     type === "create"
@@ -78,7 +63,11 @@ const FormModal = ({
 
   const Form = () => {
 
-    const [state,formAction] = useFormState(deleteActionMap[table],{success:false,error:false})
+    const [state, formAction] = useFormState(deleteActionMap[table], {
+      success: false,
+      error: false,
+    });
+
 
     const router = useRouter();
 
@@ -101,7 +90,7 @@ const FormModal = ({
         </button>
       </form>
     ) : type === "create" || type === "update" ? (
-      forms[table](setOpen,type, data)
+      forms[table](setOpen,type, data,relatedData)
     ) : (
       "Form Not Found"
     )
