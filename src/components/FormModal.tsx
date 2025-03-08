@@ -1,5 +1,5 @@
 "use client";
-import { deleteSubject } from "@/lib/actions";
+import { deleteClass, deleteSubject } from "@/lib/actions";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ import { FormContainerProps } from "./FormContainer";
 
 const deleteActionMap = {
   subject:deleteSubject,
-  // class:deleteClass,
+  class:deleteClass,
   // teacher:deleteTeacher,
   // student:deleteStudent,
   // parent:deleteParent,
@@ -33,12 +33,16 @@ const StudentForm = dynamic (()=>import("./forms/StudentForm"),{
 const SubjectForm = dynamic(() => import("./forms/SubjectForm"), {
   loading: () => <h1>Loading...</h1>,
 });
+const ClassForm = dynamic(() => import("./forms/ClassForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
 
 
 const forms: {
   [key: string]: (setOpen:Dispatch<SetStateAction<boolean>>, type: "create" | "update", data?: any,relatedData?:any) => React.JSX.Element;
 } = {
   subject: (setOpen,type,data,relatedData) => <SubjectForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>,
+  class: (setOpen,type,data,relatedData) => <ClassForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>,
   // teacher: (setOpen,type,data,relatedData) => <TeacherForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>,
   // student: (setOpen,type,data,relatedData) => <StudentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData}/>,
 };
@@ -50,7 +54,6 @@ const FormModal = ({
   id,
   relatedData,
 }: FormContainerProps & {relatedData?:any}) => {
-  console.log("FormModal -> relatedData", relatedData);
   const size = type === "create" ? "w-8 h-8" : "w-7 h-7";
   const bgColor =
     type === "create"

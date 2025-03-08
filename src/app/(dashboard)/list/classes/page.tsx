@@ -1,4 +1,4 @@
-import FormModal from '@/components/FormModal'
+import FormContainer from '@/components/FormContainer'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
@@ -64,8 +64,8 @@ const ClassListPage = async ({
                         &&
                         (
                             <>
-                            <FormModal table="class" type="update" data={item} />
-                            <FormModal table="class" type="delete" id={item.id} />
+                            <FormContainer table="class" type="update" data={item} />
+                            <FormContainer table="class" type="delete" id={item.id} />
                             </>
                         )
                     }
@@ -128,7 +128,7 @@ const ClassListPage = async ({
                     {role==="admin"
                         &&
                         (
-                            <FormModal table="class" type="create"  />
+                            <FormContainer table="class" type="create"  />
                         )
                     }
                 </div>
