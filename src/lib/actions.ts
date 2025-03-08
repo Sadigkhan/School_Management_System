@@ -136,7 +136,6 @@ export const createTeacher = async (
     const user = await clerk.users.createUser({
       username:data.username,
       password:data.password,
-      emailAddress:[data.email as string],
       firstName:data.name,
       lastName:data.surname,
       publicMetadata:{role:"teacher"}
@@ -144,22 +143,24 @@ export const createTeacher = async (
     });
 
     await prisma.teacher.create({
-      data:{
-        id:user.id,
-        username:data.username,
-        name:data.name,
-        surname:data.surname,
-        email:data.email,
-        phone:data.phone,
-        address:data.address,
-        image:data.img,
-        bloodType:data.bloodType,
-        birthday:data.birthday,
-        gender:data.sex,
-        subjects:{
-          connect:data.subjects?.map((subjectId:string)=>({id:parseInt(subjectId)}))
-        }
-      }
+      data: {
+        id: user.id,
+        username: data.username,
+        name: data.name,
+        surname: data.surname,
+        email: data.email || null,
+        phone: data.phone || null,
+        address: data.address,
+        image: data.image || null,
+        bloodType: data.bloodType,
+        gender: data.sex,
+        birthday: data.birthday,
+        subjects: {
+          connect: data.subjects?.map((subjectId: string) => ({
+            id: parseInt(subjectId),
+          })),
+        },
+      },
     });
 
     return { success: true, error: false };
@@ -172,35 +173,65 @@ export const updateTeacher = async (
     currentState: CurrentState,
     data: TeacherSchema
   ) => {
+
+    if (!data.id) {
+      return { success: false, error: true };
+    }
+
     try {
-      await prisma.teacher.update({
-        where:{
-            id:data.id
-        },
-        data
+      const clerk = await clerkClient();
+      const user = await clerk.users.updateUser(data.id, {
+        username: data.username,
+        ...(data.password !== "" && { password: data.password }),
+        firstName: data.name,
+        lastName: data.surname,
       });
-  
+      await prisma.teacher.update({
+        where: {
+          id: data.id,
+        },
+        data: {
+          ...(data.password !== "" && { password: data.password }),
+          username: data.username,
+          name: data.name,
+          surname: data.surname,
+          email: data.email || null,
+          phone: data.phone || null,
+          address: data.address,
+          image: data.image || null,
+          bloodType: data.bloodType,
+          gender: data.sex,
+          birthday: data.birthday,
+          subjects: {
+            set: data.subjects?.map((subjectId: string) => ({
+              id: parseInt(subjectId),
+            })),
+          },
+        },
+      });
+
+      
       return { success: true, error: false };
     } catch (error) {
         console.log(error)
       return { success: false, error: true };
     }
-  };
-
-export const deleteTeacher = async (
-    currentState: CurrentState,
-    data: FormData
-  ) => {
-    const id = data.get("id") as string;
-    try {
-      await prisma.teacher.delete({
-        where:{
-            id:parseInt(id)
-        },
-      });
-  
-      return { success: true, error: false };
-    } catch (error) {
-      return { success: false, error: true };
-    }
 };
+
+// export const deleteTeacher = async (
+//     currentState: CurrentState,
+//     data: FormData
+//   ) => {
+//     const id = data.get("id") as string;
+//     try {
+//       await prisma.teacher.delete({
+//         where:{
+//             id:parseInt(id)
+//         },
+//       });
+  
+//       return { success: true, error: false };
+//     } catch (error) {
+//       return { success: false, error: true };
+//     }
+// };

@@ -43,7 +43,8 @@ const TeacherForm = ({
   );
 
   const onSubmit = handleSubmit((formData) => {
-    formAction({...formData, img:img?.secure_url});
+    // console.log(formData)
+    formAction({...formData, image:img?.secure_url});
   });
 
   const router = useRouter();
@@ -56,7 +57,7 @@ const TeacherForm = ({
       setOpen(false);
       router.refresh();
     }
-  }, [state]);
+  }, [state,router, setOpen, type]);
 
   const { subjects } = relatedData || {};
 
@@ -134,11 +135,21 @@ const TeacherForm = ({
         <InputField
           label="Birthday"
           name="birthday"
-          defaultValue={data?.birthday}
+          defaultValue={data?.birthday.toISOString().split("T")[0]}
           register={register}
           error={errors.birthday}
           type="date"
         />
+        {data && (
+          <InputField
+            label="Id"
+            name="id"
+            defaultValue={data?.id}
+            register={register}
+            error={errors?.id}
+            hidden
+          />
+        )}
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Gender</label>
           <select
@@ -192,7 +203,7 @@ const TeacherForm = ({
       </div>
 
       {state.error && (
-        <span className="text-red-400 text-sm">Something went wrong! {state.error}</span>
+        <span className="text-red-400 text-sm">Something went wrong!</span>
       )}
 
       <button className="bg-blue-400 text-white p-2 rounded-md">
