@@ -96,14 +96,7 @@ export const updateClass = async (
         where:{
             id:data.id
         },
-        data: {
-          name: data.name,
-          ...(data.teachers && {
-            teachers: {
-              set: data.teachers.map((teacherId) => ({ id: teacherId })), // Connect by ID
-            },
-          }),
-        },
+        data
       });
   
       return { success: true, error: false };

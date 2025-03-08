@@ -94,7 +94,7 @@ const ClassForm = ({
             defaultValue={data?.teachers}
           >
             {teachers?.map((teacher: { id: string; name: string; surname: string }) => (
-              <option key={teacher.id} value={teacher.id}>
+              <option key={teacher.id} value={teacher.id}selected={data && data.supervisorId === teacher.id}>
                 {teacher.name} {teacher.surname}
               </option>
             ))}
@@ -112,7 +112,7 @@ const ClassForm = ({
             defaultValue={data?.gradeId}
           >
             {grades?.map((grade: { id: number; level: number; }) => (
-              <option key={grade.id} value={grade.id}>
+              <option key={grade.id} value={grade.id} selected={data && data.gradeId === grade.id}>
                 {grade.level}
               </option>
             ))}
