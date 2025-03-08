@@ -186,12 +186,14 @@ export const updateTeacher = async (
         firstName: data.name,
         lastName: data.surname,
       });
+
+      console.log("Clerk user update response:", user);
       await prisma.teacher.update({
         where: {
           id: data.id,
         },
         data: {
-          ...(data.password !== "" && { password: data.password }),
+          // ...(data.password !== "" && { password: data.password }),
           username: data.username,
           name: data.name,
           surname: data.surname,

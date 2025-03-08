@@ -4,7 +4,7 @@ import FormContainer from "@/components/FormContainer";
 import Performance from "@/components/Performance";
 import { prisma } from "@/lib/prisma";
 import { getRole } from "@/lib/utils";
-import { Subject, Teacher } from "@prisma/client";
+import { Teacher } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,8 +13,9 @@ import React from "react";
 const SingleTeacherPage = async ({params:{id}}:{params:{id:string}}) => {
 
   const teacher: (Teacher & {_count:{subjects:number;lessons:number;classes:number}}) | null = await prisma.teacher.findUnique({
-    where:{ id },
+    where:{ id},
     include:{
+      
       _count:{
         select:{
           subjects:true,
@@ -28,6 +29,7 @@ const SingleTeacherPage = async ({params:{id}}:{params:{id:string}}) => {
   const role = await getRole();
 
   if(!teacher) return notFound();
+
 
 
   return (
