@@ -187,7 +187,6 @@ export const updateTeacher = async (
         lastName: data.surname,
       });
 
-      console.log("Clerk user update response:", user);
       await prisma.teacher.update({
         where: {
           id: data.id,
@@ -220,20 +219,22 @@ export const updateTeacher = async (
     }
 };
 
-// export const deleteTeacher = async (
-//     currentState: CurrentState,
-//     data: FormData
-//   ) => {
-//     const id = data.get("id") as string;
-//     try {
-//       await prisma.teacher.delete({
-//         where:{
-//             id:parseInt(id)
-//         },
-//       });
+export const deleteTeacher = async (
+    currentState: CurrentState,
+    data: FormData
+  ) => {
+    const id = data.get("id") as string;
+    try {
+      const clerk = await clerkClient();
+      await clerk.users.deleteUser(id);
+      await prisma.teacher.delete({
+        where:{
+            id:id
+        },
+      });
   
-//       return { success: true, error: false };
-//     } catch (error) {
-//       return { success: false, error: true };
-//     }
-// };
+      return { success: true, error: false };
+    } catch (error) {
+      return { success: false, error: true };
+    }
+};
